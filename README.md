@@ -9,7 +9,7 @@ Este projeto em Python consulta a **previsão do tempo** para os próximos 7 dia
   - Temperatura máxima (°C)
   - Temperatura mínima (°C)
   - Precipitação total (mm)
-- Geração de arquivo `.csv` com a previsão dos próximos dias.
+- Geração de arquivo `.csv` com a previsão dos próximos dias. (`.csv` da cidade de Niterói usada como exemplo do resultado)
 
 ---
 

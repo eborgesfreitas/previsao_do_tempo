@@ -1,11 +1,11 @@
 import requests
 import pandas as pd
 
-def get_coordinates(cidade):
+def get_coordenadas(cidade):
     """Consulta a latitude e longitude da cidade usando a API da Open-Meteo."""
     url = f"https://geocoding-api.open-meteo.com/v1/search?name={cidade}&count=1&language=pt&format=json"
-    response = requests.get(url)
-    dados = response.json()
+    resp = requests.get(url)
+    dados = resp.json()
 
     if "results" in dados:
         dados_cidade = dados["results"][0]
@@ -13,30 +13,30 @@ def get_coordinates(cidade):
     else:
         raise Exception("Cidade não encontrada.")
 
-def get_weather_data(latitude, longitude, timezone):
+def get_dados_tempo(latitude, longitude, timezone):
     """Consulta a previsão dos últimos 7 dias na API Open-Meteo."""
-    weather_url = (
+    tempo_url = (
     f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}"
     f"&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone={timezone}&past_days=0"
     )
-    response = requests.get(weather_url)
-    return response.json()
+    resp = requests.get(tempo_url)
+    return resp.json()
 
-def salvar_csv(weather_data, cidade):
+def salvar_csv(tempo_dados, cidade):
     """Salva os dados diários em um arquivo CSV."""
-    daily = weather_data['daily']
-    df = pd.DataFrame(daily)
+    dados_diarios = tempo_dados['daily']
+    df = pd.DataFrame(dados_diarios)
     df.to_csv(f"previsao_{cidade.lower().replace(' ', '_')}.csv", index=False)
     print(f"Arquivo 'previsao_{cidade}.csv' salvo com sucesso!")
 
 def main():
     cidade = input("Digite o nome da cidade: ")
     try:
-        lat, lon, nome_formatado, timezone = get_coordinates(cidade)
+        lat, lon, nome_formatado, timezone = get_coordenadas(cidade)
         print(f"Coordenadas {nome_formatado}: latitude {lat}, longitude {lon}")
         
-        weather_data = get_weather_data(lat, lon, timezone)
-        salvar_csv(weather_data, nome_formatado)
+        tempo_dados = get_dados_tempo(lat, lon, timezone)
+        salvar_csv(tempo_dados, nome_formatado)
         
     except Exception as e:
         print("Erro:", e)
